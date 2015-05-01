@@ -2,26 +2,44 @@ package estimcompl;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import static java.lang.Math.abs;
 import java.util.LinkedList;
 
 public class EstimCompl {
-
-    public int estimate(int[] sz, double[] T) {
+   public int estimate(int[] sz, double[] T) {
+        /* int [] sz - масив розмірів вхідних даних , тобто масив із N,
+         побудований таким чином, що до половини масиву йдуть розміри N, 2N, 4N ітд, 
+         а в другій половині квадрати перших  елементів, тобто N^2, (2N)^2, (4N)^2 ..
+         double[] T - масив вимірів часу виконання на відповідних вхідних розмірах 
+         тому отримуємо декілька перевірок з різними N, "number of checks :" показує скільки саме перевірок виконувалось
+        
+код який відповідає за обчислення міри R^2 закоментований,
+з ним ще треба подумати трохи точніше, або прибрати взагалі , бо на деяких тестах досить дивні результати R^2 */
+ 
+       
         int l = 1 + T.length / 2;
         double t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0, a = 0, b1 = 0, b2 = 0;
         int[] r = {0, 0, 0, 0, 0, 0};
-        double[] y = new double[T.length];
-        for (int i = 0; i < T.length; i++) {
-            y[i] = 0;
-        }
-        double Y = 0, R = 0, R1 = 0, R2 = 0;
-        for (int i = 0; i < T.length; i++) {
-            Y += T[i];
-        }
-        Y = Y / T.length;
+        /* r[0]- alogN,  r[1] - aNlogN,  r[2]- aN^2logN,  r[3]- a^N, r[4]- aN^b, r[5]- aN+b
+        якщо умови на приналежність складності до певного класу на даній ітерації виконуються, то 
+        відповідний елемент масиву r[], той що відповідає за цю складність,  збільшується на 1
+        
+        наприклад після обробки даних, які отримані в резуьтаті тестування сортуванням merge 
+        кількість виконаних перевірок дорівнює 3
+        масив r[] став рівним r[]={0,0,0,0,3,2}, тобто з 3 перевірок 3 сказало що складність aN^b, 
+        і 2 - що складність aN+b */
+        
+        
+//        double[] y = new double[T.length];
+//        for (int i = 0; i < T.length; i++) {
+//            y[i] = 0;
+//        }
+//        double Y = 0, R = 0, R1 = 0, R2 = 0;
+//        for (int i = 0; i < T.length; i++) {
+//            Y += T[i];
+//        }
+//        Y = Y / T.length;
         for (int i = 0; i < l - 2; i++) {
             t1 = T[i + 1] / T[i];        //T[2N]/T[N]
             t2 = T[i + 2] / T[i + 1];    //T[4N]/T[2N]
@@ -29,81 +47,81 @@ public class EstimCompl {
             t4 = T[i + 2] - T[i + 1];     //T[4N]-T[2N]
             t5 = T[i + 1] - T[i];         //T[2N]-T[N]
             
-            System.out.println(t3+ "            "+ sz[i]+"            "+2*sz[i]);
+           // System.out.println(t3+ "            "+ sz[i]+"            "+2*sz[i]);
             if (t1 > 1 && t1 < 2 && abs(t3 - 2) < 1) {  //alogN
                 r[0] = r[0] + 1;
-                for (int j = 0; j < T.length; j++) {
-                    a += T[j] / Math.log(sz[j]);
-                }
-                a = a / T.length;
-                for (int j = 0; j < T.length; j++) {
-                    y[j] = a * Math.log(sz[j]);
-                }
-                for (int j = 0; j < T.length; j++) {
-                    R1 += Math.pow(y[j] - Y, 2);
-                    R2 += Math.pow(T[j] - Y, 2);
-                }
-                R = R1 / R2;
-                //System.out.println("R^2 = " + R);
-                R1 = 0;
-                R2 = 0;
+//                for (int j = 0; j < T.length; j++) {
+//                    a += T[j] / Math.log(sz[j]);
+//                }
+//                a = a / T.length;
+//                for (int j = 0; j < T.length; j++) {
+//                    y[j] = a * Math.log(sz[j]);
+//                }
+//                for (int j = 0; j < T.length; j++) {
+//                    R1 += Math.pow(y[j] - Y, 2);
+//                    R2 += Math.pow(T[j] - Y, 2);
+//                }
+//                R = R1 / R2;
+//                //System.out.println("R^2 = " + R);
+//                R1 = 0;
+//                R2 = 0;
             }
             if (t1 > 2 && t1 < 3 && abs(t3 - 2 * sz[i]) < 1) {//aNlogN
                 r[1] = r[1] + 1;
 
-                for (int j = 0; j < T.length; j++) {
-                    a += T[j] / (sz[j] * Math.log(sz[j]));
-                }
-                a = a / T.length;
-                for (int j = 0; j < T.length; j++) {
-                    y[j] = a * sz[j] * Math.log(sz[j]);
-                }
-                for (int j = 0; j < T.length; j++) {
-                    R1 += Math.pow(y[j] - Y, 2);
-                    R2 += Math.pow(T[j] - Y, 2);
-                }
-                R = R1 / R2;
-                //System.out.println(t3);
-                R1 = 0;
-                R2 = 0;
+//                for (int j = 0; j < T.length; j++) {
+//                    a += T[j] / (sz[j] * Math.log(sz[j]));
+//                }
+//                a = a / T.length;
+//                for (int j = 0; j < T.length; j++) {
+//                    y[j] = a * sz[j] * Math.log(sz[j]);
+//                }
+//                for (int j = 0; j < T.length; j++) {
+//                    R1 += Math.pow(y[j] - Y, 2);
+//                    R2 += Math.pow(T[j] - Y, 2);
+//                }
+//                R = R1 / R2;
+//                //System.out.println(t3);
+//                R1 = 0;
+//                R2 = 0;
             }
             if (t1 > 4 && t1 < 5 && abs(t3 - 2 * sz[i] * sz[i]) < 1) { //aN^2logN
                 r[2] = r[2] + 1;
 
-                for (int j = 0; j < T.length; j++) {
-                    a += T[j] / (Math.pow(sz[j], 2) * Math.log(sz[j]));
-                }
-                a = a / T.length;
-                for (int j = 0; j < T.length; j++) {
-                    y[j] = a * Math.pow(sz[j], 2) * Math.log(sz[j]);
-                }
-                for (int j = 0; j < T.length; j++) {
-                    R1 += Math.pow(y[j] - Y, 2);
-                    R2 += Math.pow(T[j] - Y, 2);
-                }
-                R = R1 / R2;
-                //System.out.println("R^2 = " + R);
-                R1 = 0;
-                R2 = 0;
+//                for (int j = 0; j < T.length; j++) {
+//                    a += T[j] / (Math.pow(sz[j], 2) * Math.log(sz[j]));
+//                }
+//                a = a / T.length;
+//                for (int j = 0; j < T.length; j++) {
+//                    y[j] = a * Math.pow(sz[j], 2) * Math.log(sz[j]);
+//                }
+//                for (int j = 0; j < T.length; j++) {
+//                    R1 += Math.pow(y[j] - Y, 2);
+//                    R2 += Math.pow(T[j] - Y, 2);
+//                }
+//                R = R1 / R2;
+//                //System.out.println("R^2 = " + R);
+//                R1 = 0;
+//                R2 = 0;
             }
             if (abs(t1 - T[i]) < 1) {//a^N
                 r[3] = r[3] + 1;
-
-                for (int j = 0; j < T.length; j++) {  ///  ffiiii
-                    a += Math.pow(sz[j], 1 / sz[j]);
-                }
-                a = a / T.length;
-                for (int j = 0; j < T.length; j++) {
-                    y[j] = Math.pow(a, sz[j]);
-                }
-                for (int j = 0; j < T.length; j++) {
-                    R1 += Math.pow(y[j] - Y, 2);
-                    R2 += Math.pow(T[j] - Y, 2);
-                }
-                R = R1 / R2;
-                //System.out.println("R^2 = " + R);
-                R1 = 0;
-                R2 = 0;
+//
+//                for (int j = 0; j < T.length; j++) {  
+//                    a += Math.pow(sz[j], 1 / sz[j]);
+//                }
+//                a = a / T.length;
+//                for (int j = 0; j < T.length; j++) {
+//                    y[j] = Math.pow(a, sz[j]);
+//                }
+//                for (int j = 0; j < T.length; j++) {
+//                    R1 += Math.pow(y[j] - Y, 2);
+//                    R2 += Math.pow(T[j] - Y, 2);
+//                }
+//                R = R1 / R2;
+//                //System.out.println("R^2 = " + R);
+//                R1 = 0;
+//                R2 = 0;
             }
             if (abs(t1 - t2) < 1) {//aN^b
 //                System.out.println("T[2N] / T[N] = " + t1);
@@ -111,23 +129,23 @@ public class EstimCompl {
                 b1 = Math.log(t1) / Math.log(2);
                 b2 = Math.log(t3) / Math.log(sz[i]);
                 double b = (b1 + b2) / 2;
-                a = T[i] / (Math.pow(sz[i], b));
+               // a = T[i] / (Math.pow(sz[i], b));
                // System.out.println("b1= "+b1 + "   b2= "+b2+"   bs= "+b);
                 if (abs(b1 - b2) < 1) {
                     r[4] = r[4] + 1;
-
-                    for (int j = 0; j < T.length; j++) {
-                        y[j] = a * Math.pow(sz[j], b);
-                    }
-                    for (int j = 0; j < T.length; j++) {
-                        R1 += Math.pow(y[j] - Y, 2);
-                        R2 += Math.pow(T[j] - Y, 2);
-                    }
-                    R = R1 / R2;
-                    //System.out.println("R^2 = " + R);
-                    Y = 0;
-                    R1 = 0;
-                    R2 = 0;
+//
+//                    for (int j = 0; j < T.length; j++) {
+//                        y[j] = a * Math.pow(sz[j], b);
+//                    }
+//                    for (int j = 0; j < T.length; j++) {
+//                        R1 += Math.pow(y[j] - Y, 2);
+//                        R2 += Math.pow(T[j] - Y, 2);
+//                    }
+//                    R = R1 / R2;
+//                    //System.out.println("R^2 = " + R);
+//                    Y = 0;
+//                    R1 = 0;
+//                    R2 = 0;
                 }
                // System.out.println("\n");
             }
@@ -139,18 +157,18 @@ public class EstimCompl {
                 if (abs(b1 - b2) < 1) {
                     r[5] = r[5] + 1;
 
-                    for (int j = 0; j < T.length; j++) {
-                        y[j] = a * sz[j] + b;
-                    }
-                    for (int j = 0; j < T.length; j++) {
-                        R1 += Math.pow(y[j] - Y, 2);
-                        R2 += Math.pow(T[j] - Y, 2);
-                    }
-                    R = R1 / R2;
-                   // System.out.println("aN+b:  R^2 = " + R);
-                    Y = 0;
-                    R1 = 0;
-                    R2 = 0;
+//                    for (int j = 0; j < T.length; j++) {
+//                        y[j] = a * sz[j] + b;
+//                    }
+//                    for (int j = 0; j < T.length; j++) {
+//                        R1 += Math.pow(y[j] - Y, 2);
+//                        R2 += Math.pow(T[j] - Y, 2);
+//                    }
+//                    R = R1 / R2;
+//                   // System.out.println("aN+b:  R^2 = " + R);
+//                    Y = 0;
+//                    R1 = 0;
+//                    R2 = 0;
                 }
             }
         }
@@ -158,7 +176,7 @@ public class EstimCompl {
         for (int i = 0; i < r.length; i++) {
             System.out.println(r[i]);
         }
-        return -1;
+        return 0;
     }
 
     public static void main(String[] args) throws Exception {
@@ -197,6 +215,7 @@ public class EstimCompl {
         
         EstimCompl e = new EstimCompl();
         e.estimate(sizes, times);
+                
     }
 
 }
