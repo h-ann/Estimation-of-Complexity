@@ -20,7 +20,7 @@ public class EstimCompl {
             t3 = T[l + i] / T[i];        //T[N^2]/T[N] 
             t4 = T[i + 2] - T[i + 1];     //T[4N]-T[2N]
             t5 = T[i + 1] - T[i];         //T[2N]-T[N]
-
+System.out.println(t3);
             if (t1 > 1 && t1 < 2 && abs(t3 - 2) < 1) {  //alogN
                 r[0] = r[0] + 1;
 
@@ -64,14 +64,14 @@ public class EstimCompl {
         return 0;
     }
 
-    public static void main(String[] args) throws Exception {
-        int[] sizes = {100, 200, 400, 800, 1600, 10000, 40000, 160000, 640000};// for marge
-        //int[] sizes = {100, 200, 400, 800, 10000, 40000, 160000}; // for buble
-        //int[] sizes = {400, 800, 1600, 3200, 6400, 160000, 640000, 2560000, 10240000};   //for array.sort();     
-
-        double[] times = {0.01, 0.022, 0.048, 0.103, 0.213, 1.451, 6.157, 25.835, 110.553}; //merge
-        //double[] times = {0.022, 0.086, 0.340, 1.428, 252.585, 4192.996, 70269.942}; //buble
-        // double[] times = {0.007, 0.009, 0.022, 0.038, 0.069, 1.716, 7.058, 33.457, 110.467};//array.sort
+//    public static void main(String[] args) throws Exception {
+//        int[] sizes = {100, 200, 400, 800, 1600, 10000, 40000, 160000, 640000};// for marge
+//        //int[] sizes = {100, 200, 400, 800, 10000, 40000, 160000}; // for buble
+//        //int[] sizes = {400, 800, 1600, 3200, 6400, 160000, 640000, 2560000, 10240000};   //for array.sort();     
+//
+//        double[] times = {0.01, 0.022, 0.048, 0.103, 0.213, 1.451, 6.157, 25.835, 110.553}; //merge
+//        //double[] times = {0.022, 0.086, 0.340, 1.428, 252.585, 4192.996, 70269.942}; //buble
+//        // double[] times = {0.007, 0.009, 0.022, 0.038, 0.069, 1.716, 7.058, 33.457, 110.467};//array.sort
 
 //        LinkedList str = new LinkedList();
 //        FileInputStream fis = new FileInputStream("/home/ania/res.txt");
@@ -98,9 +98,9 @@ public class EstimCompl {
 //            times[i] = Double.parseDouble(arr[4].replace(',', '.'));
 //        }
 //        
-        EstimCompl e = new EstimCompl();
-        e.estimate(sizes, times);
+      //  EstimCompl e = new EstimCompl();
+     //   e.estimate(sizes, times);
 
-    }
+  //  }
 
 }
